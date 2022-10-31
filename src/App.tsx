@@ -18,8 +18,16 @@ const App = () => {
   };
   return (
     <div>
+      <h2>这个是用css画出来的👇</h2>
       <CanvasWorker src={img()} onLoad={handleLoad} />
       <ShadowPreview rgbaList={shadows()} width={width()} height={height()} />
+      <hr />
+      <div>
+        源代码：
+        <a href="https://github.com/mowtwo/css-draw">
+          https://github.com/mowtwo/css-draw
+        </a>
+      </div>
     </div>
   );
 };

@@ -1,6 +1,8 @@
 import { createEffect, createMemo, createSignal } from "solid-js";
 import { RGBA } from "../utils/imageData2RGBA";
+import readAsBase64 from "../utils/readAsBase64";
 import ref from "../utils/ref";
+import tempHTML from "../utils/tempHTML";
 
 export interface ShadowPreviewProps {
   rgbaList: RGBA[];
@@ -17,7 +19,12 @@ const ShadowPreview = (props: ShadowPreviewProps) => {
   const handleDownload = async () => {
     setLoading(true);
     const { outerHTML } = out.content!;
-    const blob = new Blob([outerHTML]);
+    const blob = new Blob([tempHTML(outerHTML)]);
+    const uri = await readAsBase64(blob as File);
+    setHref(uri);
+    setDownload(`${Date.now()}.html`);
+    d.content!.click();
+    setLoading(false);
   };
   return (
     <>
@@ -28,8 +35,9 @@ const ShadowPreview = (props: ShadowPreviewProps) => {
         }}
       >
         <div
-          class="w-1px h-1px"
           style={{
+            width: "1px",
+            height: "1px",
             "box-shadow": props.rgbaList
               .map((item) => {
                 const { 0: r, 1: g, 2: b, 3: a, x, y } = item;
